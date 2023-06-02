@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
 {
+    public bool disabled = false;
     private CharacterController controller;
     private Vector3 playerVelocity;
     public float speed = 3f;
@@ -27,24 +28,28 @@ public class PlayerMotor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isGrounded = controller.isGrounded;
-
-        if(lerpCrouch)
+        if (!disabled)
         {
-            crouchTimer += Time.deltaTime;
-            float p = crouchTimer / 1;
-            p *= p;
-            if(crouching)
-                controller.height = Mathf.Lerp(controller.height, 1, p);
-            else
-                controller.height = Mathf.Lerp(controller.height, 2, p);
+            isGrounded = controller.isGrounded;
 
-            if (p > 1)
+            if (lerpCrouch)
             {
-                lerpCrouch = false;
-                crouchTimer = 0f;
+                crouchTimer += Time.deltaTime;
+                float p = crouchTimer / 1;
+                p *= p;
+                if (crouching)
+                    controller.height = Mathf.Lerp(controller.height, 1, p);
+                else
+                    controller.height = Mathf.Lerp(controller.height, 2, p);
+
+                if (p > 1)
+                {
+                    lerpCrouch = false;
+                    crouchTimer = 0f;
+                }
             }
         }
+        
     }
 
     public void Crouch()
